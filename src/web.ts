@@ -10,9 +10,12 @@ export class CapacitorSMSRetrieverWeb extends WebPlugin implements CapacitorSMSR
 	}
 
 	start(): Promise<any> {
-		return new Promise((resolve) => {
-			return resolve();
-		});
+		const result: any = {};
+    	return result;
+	}
+	stop(): Promise<any> {
+		const result: any = {};
+    	return result;
 	}
 }
 

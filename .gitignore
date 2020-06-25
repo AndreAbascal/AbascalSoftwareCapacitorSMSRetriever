@@ -1,1 +1,5 @@
+android/*.iml
+android/build/.transforms/*
+android/build/*/*
+dist/*
 node_modules

@@ -8,10 +8,10 @@ import Capacitor
 @objc(CapacitorSMSRetriever)
 public class CapacitorSMSRetriever: CAPPlugin {
     
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
-        call.success([
-            "value": value
-        ])
+    @objc func start(_ call: CAPPluginCall) {
+        call.resolve();
+    }
+    @objc func stop(_ call: CAPPluginCall) {
+        call.resolve();
     }
 }

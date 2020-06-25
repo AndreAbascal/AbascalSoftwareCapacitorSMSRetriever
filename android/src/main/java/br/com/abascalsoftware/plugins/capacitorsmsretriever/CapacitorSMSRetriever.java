@@ -26,7 +26,8 @@ import java.lang.Math;
 
 	},
 	requestCodes = {
-		CapacitorSMSRetriever.INTENT_START
+		CapacitorSMSRetriever.INTENT_START,
+        CapacitorSMSRetriever.INTENT_STOP
 	}
 )
 public class CapacitorSMSRetriever extends Plugin implements SMSReceiver.OTPReceiveListener {
@@ -38,12 +39,20 @@ public class CapacitorSMSRetriever extends Plugin implements SMSReceiver.OTPRece
 
     @PluginMethod()
     public void start(PluginCall call) {
+        Log.d(TAG,"SMS RETRIEVER STARTED!");
 		saveCall(call);
         AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(getContext());
 		Log.i(TAG, "HashKey: " + appSignatureHashHelper.getAppSignatures().get(0));
 		startSMSListener();
-		call.success();
+		//call.success();
 	}
+
+    @PluginMethod()
+    public void stop(PluginCall call){
+        Log.d(TAG,"SMS RETRIEVER STOPPING...");
+        this.stopSMSListener();
+        call.resolve();
+    }
 	
 	private void startSMSListener() {
         try {
@@ -76,6 +85,12 @@ public class CapacitorSMSRetriever extends Plugin implements SMSReceiver.OTPRece
         }
     }
 
+    private void stopSMSListener(){
+        if(smsReceiver != null){
+            getContext().unregisterReceiver(smsReceiver);
+        }
+    }
+
 
     @Override
     public void onOTPReceived(String otp) {
@@ -91,6 +106,7 @@ public class CapacitorSMSRetriever extends Plugin implements SMSReceiver.OTPRece
 		JSObject obj = new JSObject();
 		obj.put("codigo", otp);
 		savedCall.resolve(obj);
+        savedCall.release(getBridge());
     }
 
     @Override
@@ -101,6 +117,7 @@ public class CapacitorSMSRetriever extends Plugin implements SMSReceiver.OTPRece
 			return;
 		}
 		savedCall.reject("TIMEOUT");
+        savedCall.release(getBridge());
     }
 
     @Override
